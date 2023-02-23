@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .btn {
+    @apply rounded bg-signtalk-800 hover:bg-signtalk-700 text-signtalk-200 m-2 py-2 px-3 flex items-center justify-center;
+  }
+}
