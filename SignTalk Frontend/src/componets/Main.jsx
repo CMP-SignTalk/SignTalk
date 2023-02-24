@@ -1,8 +1,4 @@
 import React, { useState } from 'react';
-// import { AiOutlineSwap,  } from 'react-icons/ai';
-import { MdSwapHorizontalCircle } from 'react-icons/md';
-// import { HiArrowPath } from 'react-icons/hi';
-import { IoMdSwap } from 'react-icons/io';
 
 import Forward from './Forward';
 import Backward from './Backward';
