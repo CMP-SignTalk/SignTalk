@@ -1,14 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { MdKeyboardVoice } from 'react-icons/md';
 import { ReactMediaRecorder } from 'react-media-recorder';
 import axios from 'axios';
 
-let flag = false;
-
 const Forward = ({ recording, setRecording }) => {
+  const [gloss, setGloss] = useState(null);
+
   const onStopHandler = (blobUrl, blob) => {
     const file = new File([blob], 'audio', { type: blob.type });
-    // Send the audio file to the backend server for processing
     const formData = new FormData();
     formData.append('audio', file);
     axios
@@ -18,13 +17,12 @@ const Forward = ({ recording, setRecording }) => {
         },
       })
       .then((res) => {
-        console.log(res);
+        setGloss(res.data.asl_gloss);
       })
       .catch((err) => {
         console.log(err);
       });
     setRecording(false);
-    flag = true;
   };
   return (
     <div>
@@ -45,7 +43,8 @@ const Forward = ({ recording, setRecording }) => {
               </span>
               {recording ? 'Stop' : 'Start'} Recording
             </button>
-            {flag && <audio src={mediaBlobUrl} controls autoPlay />}
+            {/* {gloss && <Avatar gloss={gloss}/>} */}
+            {gloss && <h2>{gloss}</h2>}
           </div>
         )}
       />
