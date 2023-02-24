@@ -1,4 +1,6 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
+from gtts import gTTS
+from io import BytesIO
 
 app = Flask(__name__)
 
@@ -14,19 +16,25 @@ def speech():
     audio_file = request.files['audio']
     # english = speech_recognition(audio_file)
     # als_gloss = asl_translation(english)
-    # This will be returned to the frontend and will be displayed with the avatar
-    response = jsonify({'als_gloss': 'THIS X-ASL GLOSS'})
+    response = jsonify({'asl_gloss': 'THIS X-ASL GLOSS'})
     return corsify(response)
     
+def text_to_speech(english_text='This is the English translation'):
+    tts = gTTS(text=english_text, lang='en')
+    audio = BytesIO()
+    tts.write_to_fp(audio)
+    audio.seek(0)
+    return audio
+
 @app.route('/video', methods=['POST'])
 def video():
     # The Backward path (CV then ASL translation then Text to Speech)
     video_file = request.files['video']
     # asl_gloss = asl_recognition(video_file)
-    # english = asl_translation(asl_gloss)
-    # audio = text_to_speech(english)
-    # This will be returned to the frontend and will be played
-    response = jsonify({'english': 'English Audio'})
+    # english_text = asl_translation(asl_gloss)
+    english_text = 'This is the English translation of the video'
+    audio = text_to_speech(english_text)
+    response = send_file(audio, mimetype='audio/mpeg', as_attachment=False)
     return corsify(response)
 
 if __name__ == '__main__':
