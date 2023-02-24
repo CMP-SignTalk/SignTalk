@@ -8,6 +8,25 @@ import LiveVideoPreview from './LiveVideoPreview';
 let flag = false;
 
 const Backward = ({ recording, setRecording }) => {
+  const onStopHandler = (blobUrl, blob) => {
+    const file = new File([blob], 'video', { type: blob.type });
+    // Send the video file to the backend server for processing
+    const formData = new FormData();
+    formData.append('video', file);
+    axios
+      .post('http://127.0.0.1:5000/video', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    setRecording(false);
+  };
   return (
     <div>
       <ReactMediaRecorder
@@ -16,25 +35,7 @@ const Backward = ({ recording, setRecording }) => {
           setRecording(true);
           flag = true;
         }}
-        onStop={(blobUrl, blob) => {
-          const file = new File([blob], 'video', { type: blob.type });
-          // Send the video file to the backend server for processing
-          const formData = new FormData();
-          formData.append('video', file);
-          axios
-            .post('http://127.0.0.1:5000/video', formData, {
-              headers: {
-                'Content-Type': 'multipart/form-data',
-              },
-            })
-            .then((res) => {
-              console.log(res);
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-          setRecording(false);
-        }}
+        onStop={onStopHandler}
         render={({
           startRecording,
           stopRecording,

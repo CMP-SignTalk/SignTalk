@@ -10,20 +10,23 @@ def corsify(response):
 
 @app.route('/audio', methods=['POST'])
 def speech():
-    # Add our work here - The Forward path (Speech Recognition then ASL Translation)
-    # english = speech_recognition()
+    # The Forward path (Speech Recognition then ASL Translation)
+    audio_file = request.files['audio']
+    # english = speech_recognition(audio_file)
     # als_gloss = asl_translation(english)
-    print(request)
-    response = jsonify({'als_gloss': 'ASL gloss'})
+    # This will be returned to the frontend and will be displayed with the avatar
+    response = jsonify({'als_gloss': 'THIS X-ASL GLOSS'})
     return corsify(response)
     
 @app.route('/video', methods=['POST'])
 def video():
-    # Add our work here - The Backward path
-    # asl_gloss = asl_recognition()
+    # The Backward path (CV then ASL translation then Text to Speech)
+    video_file = request.files['video']
+    # asl_gloss = asl_recognition(video_file)
     # english = asl_translation(asl_gloss)
-    print(request)
-    response = jsonify({'english': 'English'})
+    # audio = text_to_speech(english)
+    # This will be returned to the frontend and will be played
+    response = jsonify({'english': 'English Audio'})
     return corsify(response)
 
 if __name__ == '__main__':
