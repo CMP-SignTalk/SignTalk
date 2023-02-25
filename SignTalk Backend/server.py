@@ -1,6 +1,12 @@
+import os
+import sys
 from flask import Flask, request, jsonify, send_file
-from gtts import gTTS
-from io import BytesIO
+
+# Add the project root directory to the Python path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# Import our modules from the Modules directory
+from Modules.TexttoSpeech.text_to_speech import text_to_speech
 
 app = Flask(__name__)
 
@@ -19,13 +25,6 @@ def speech():
     response = jsonify({'asl_gloss': 'THIS X-ASL GLOSS'})
     return corsify(response)
     
-def text_to_speech(english_text='This is the English translation'):
-    tts = gTTS(text=english_text, lang='en')
-    audio = BytesIO()
-    tts.write_to_fp(audio)
-    audio.seek(0)
-    return audio
-
 @app.route('/video', methods=['POST'])
 def video():
     # The Backward path (CV then ASL translation then Text to Speech)
