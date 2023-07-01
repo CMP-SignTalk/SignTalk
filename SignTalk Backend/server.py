@@ -6,11 +6,17 @@ from flask import Flask, request, jsonify, send_file
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Import our modules from the Modules directory
-from Modules.SR.text_to_speech import text_to_speech
-from Modules.SMT.smt import SMT
+# from Modules.SR.text_to_speech import text_to_speech
+# from Modules.SMT.smt import SMT
+from Modules.ASR.utils import load_files
+from Modules.ASR.main import transcribe
 
 # Instantiate the SMT module
 # smt = SMT()
+
+# Load the ASR files
+model, decoder = load_files()
+
 
 app = Flask(__name__)
 
@@ -24,11 +30,10 @@ def corsify(response):
 def speech():
     # The Forward path (Speech Recognition then ASL Translation)
     audio_file = request.files['audio']
-    # en = speech_recognition(audio_file)
-    en = 'the girl is in france'
+    transcript = transcribe(audio_file, model, decoder)
     # aslg = smt.forward_translate(en)
-    # response = jsonify({'aslg': aslg})
-    # return corsify(response)
+    response = jsonify({'aslg': 'aslg', 'transcript': transcript})
+    return corsify(response)
     
 @app.route('/video', methods=['POST'])
 def video():
