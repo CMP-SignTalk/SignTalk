@@ -1,39 +1,47 @@
-# from Modules.SMT.utils import *
-# import Modules.SMT.ibm1 as ibm1
-# import Modules.SMT.phrase_based as phrase_based
+import Modules.SMT.utils as utils
+import Modules.SMT.ibm1_decoder as ibm1_decoder
+import Modules.SMT.phrase_based_decoder as phrase_based_decoder
 
-from utils import *
-import ibm1 as ibm1
-import phrase_based as phrase_based
+# import utils as utils
+# import ibm1_decoder as ibm1_decoder
+# import phrase_based_decoder as phrase_based_decoder
+
+import os
 
 class SMT:
     def __init__(self):
-        # Load the language models 
-        self.bigram_lm_forward = load_model('models/lm/bigram_lm_forward.pkl')
-        self.bigram_lm_backward = load_model('models/lm/bigram_lm_backward.pkl')
+        # Download the models if they are not present
+        utils.download_models()
 
-        # Load the translation models
-        self.ibm1_forward = load_model('models/tm/ibm1_forward.pkl')
-        self.ibm1_backward = load_model('models/tm/ibm1_backward.pkl')
-        self.phrase_based_forward = load_model('models/tm/phrase_based_forward.pkl')
-        self.phrase_based_backward = load_model('models/tm/phrase_based_backward.pkl')
+        # Get the absolute path of the current directory
+        folder_dir = os.path.dirname(os.path.abspath(__file__))
+
+        # Load the language models for both ASL Gloss(Forward) and English (Backward)
+        self.forward_lm = utils.load_model(os.path.join(folder_dir, 'models', 'forward_lm.pkl'))
+        self.backward_lm = utils.load_model(os.path.join(folder_dir, 'models', 'backward_lm.pkl'))
+
+        # Load the translation models for both English to ASL Gloss (Forward) and ASL Gloss to English (Backward)
+        self.forward_ibm1 = utils.load_model(os.path.join(folder_dir, 'models', 'forward_ibm1.pkl'))
+        self.backward_ibm1 = utils.load_model(os.path.join(folder_dir, 'models', 'backward_ibm1.pkl'))
+        self.forward_phrase_based = utils.load_model(os.path.join(folder_dir, 'models', 'forward_phrase_based.pkl'))
+        self.backward_phrase_based = utils.load_model(os.path.join(folder_dir, 'models', 'backward_phrase_based.pkl'))
 
         # Instantiate the decoders
-        self.ibm1_forward_translator = ibm1.Decoder(self.ibm1_forward, self.bigram_lm_forward)
-        self.ibm1_backward_translator = ibm1.Decoder(self.ibm1_backward, self.bigram_lm_backward)
-        self.phrase_based_forward_translator = phrase_based.Decoder(self.phrase_based_forward, self.bigram_lm_forward)
-        self.phrase_based_backward_translator = phrase_based.Decoder(self.phrase_based_backward, self.bigram_lm_backward)
+        self.forward_ibm1_translator = ibm1_decoder.Decoder(self.forward_ibm1, self.forward_lm)
+        self.backward_ibm1_translator = ibm1_decoder.Decoder(self.backward_ibm1, self.backward_lm)
+        self.forward_phrase_based_translator = phrase_based_decoder.Decoder(self.forward_phrase_based, self.forward_lm)
+        self.backward_phrase_based_translator = phrase_based_decoder.Decoder(self.backward_phrase_based, self.backward_lm)
 
     # Translate from English to ASL Gloss
     def forward_translate(self, f):
-        e = self.phrase_based_forward_translator.translate(f)
+        e = self.forward_phrase_based_translator.translate(f)
         if  not e : # If the phrase based decoder fails to translate, use the IBM1 decoder
-            e = self.ibm1_forward_translator.translate(f)
+            e = self.forward_ibm1_translator.translate(f)
         return e
     
     # Translate from ASL Gloss to English
     def backward_translate(self, f):
-        e = self.phrase_based_backward_translator.translate(f)
+        e = self.backward_phrase_based_translator.translate(f)
         if  not e : # If the phrase based decoder fails to translate, use the IBM1 decoder
-            e = self.ibm1_backward_translator.translate(f)
+            e = self.backward_ibm1_translator.translate(f)
         return e

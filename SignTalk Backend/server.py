@@ -2,21 +2,24 @@ import os
 import sys
 from flask import Flask, request, jsonify, send_file
 
-# Add the project root directory to the Python path
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 # Import our modules from the Modules directory
-# from Modules.SR.text_to_speech import text_to_speech
-# from Modules.SMT.smt import SMT
+# 1. Automatic Speech Recognition (ASR) module
 from Modules.ASR.utils import load_files
 from Modules.ASR.main import transcribe
+# 2. Statistical Machine Translation (SMT) module
+from Modules.SMT.smt import SMT
+# 3. Computer Vision (CV) module
+# Abdallah Work Here
+# 4. Text to Speech (TTS) module
+from Modules.TTS.tts import text_to_speech
 
-# Instantiate the SMT module
-# smt = SMT()
-
-# Load the ASR files
+# Initialize the modules
+# 1. Load the ASR files
 model, decoder = load_files()
-
+# 2. Instantiate the SMT module
+smt = SMT()
+# 3. Instantiate the CV module
+# Abdallah Work Here
 
 app = Flask(__name__)
 
@@ -30,21 +33,28 @@ def corsify(response):
 def speech():
     # The Forward path (Speech Recognition then ASL Translation)
     audio_file = request.files['audio']
-    transcript = transcribe(audio_file, model, decoder)
-    # aslg = smt.forward_translate(en)
-    response = jsonify({'aslg': 'aslg', 'transcript': transcript})
+    # Get the english transcript from the audio file
+    en = transcribe(audio_file, model, decoder)
+    # Translate the english to ASL Gloss
+    aslg = smt.forward_translate(en)
+    # Return the ASL Gloss and the english transcript
+    response = jsonify({'en': en, 'aslg': aslg})
     return corsify(response)
     
 @app.route('/video', methods=['POST'])
 def video():
     # The Backward path (CV then ASL translation then Text to Speech)
     video_file = request.files['video']
+    # Get the ASL Gloss from the video file
     # aslg = asl_recognition(video_file)
     aslg = 'girl be in france'
-    # en = smt.backward_translate(aslg)
-    # audio = text_to_speech(en)
-    # response = send_file(audio, mimetype='audio/mpeg', as_attachment=False)
-    # return corsify(response)
+    # Translate the ASL Gloss to english
+    en = smt.backward_translate(aslg)
+    # Convert the english to audio
+    audio = text_to_speech(en)
+    # Return the audio file - TODO: return the english transcript as well
+    response = send_file(audio, mimetype='audio/mpeg', as_attachment=False)
+    return corsify(response)
 
 if __name__ == '__main__':
     app.run()
