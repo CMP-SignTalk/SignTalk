@@ -62,7 +62,7 @@ def download_files():
     print("All files downloaded")
 
 
-LM_WEIGHT = 7
+LM_WEIGHT = 2
 WORD_SCORE = -0.26
 blank_token = '*'
 sil_token = ' '

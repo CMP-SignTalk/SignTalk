@@ -2,6 +2,7 @@ import os
 import sys
 from flask import Flask, request, jsonify, send_file
 
+
 # Add the project root directory to the Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -29,9 +30,14 @@ def corsify(response):
 @app.route('/audio', methods=['POST'])
 def speech():
     # The Forward path (Speech Recognition then ASL Translation)
-    audio_file = request.files['audio']
+    received_file = request.files['audio']
+    received_file.save('audio.webm')
+    audio_file = 'audio.wav'
+    os.system(
+        "ffmpeg -i {0} -vn {1}".format('audio.webm', audio_file))
     transcript = transcribe(audio_file, model, decoder)
-    # aslg = smt.forward_translate(en)
+    # remove the audio file
+    os.remove(audio_file)
     response = jsonify({'aslg': 'aslg', 'transcript': transcript})
     return corsify(response)
     
