@@ -1,4 +1,5 @@
 # Path: Integration\Decoder\phrase_based.py
+import warnings
 from nltk.translate.stack_decoder import StackDecoder
 
 class Decoder:
@@ -7,6 +8,12 @@ class Decoder:
 
     def translate(self, f):
         f_tokens = f.lower().split()
-        e_tokens = self.stack_decoder.translate(f_tokens)
+        # stack_decoder.translate raise a warning if the source sentence contains words not in the phrase table'
+        try:
+            with warnings.catch_warnings():
+                warnings.filterwarnings("ignore", category=Warning)
+                e_tokens = self.stack_decoder.translate(f_tokens)
+        except Warning:
+            e_tokens = []
         e = ' '.join(e_tokens)
         return e
