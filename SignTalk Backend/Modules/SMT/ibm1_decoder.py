@@ -24,6 +24,11 @@ class Decoder:
                 e_tokens.append(token)
 
         e_tokens = [token for token in e_tokens if token is not None]
-        e = ' '.join(e_tokens)
+
+        # Remove one of the successive duplicate words before joining
+        new_e_tokens = [e_tokens[i] for i in range(len(e_tokens) - 1) if e_tokens[i] != e_tokens[i+1]]
+        new_e_tokens.append(e_tokens[-1])  # Add the last token
+
+        e = ' '.join(new_e_tokens)
         return e
     
