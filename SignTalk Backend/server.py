@@ -9,14 +9,15 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # Import our modules from the Modules directory
 # from Modules.SR.text_to_speech import text_to_speech
 # from Modules.SMT.smt import SMT
-from Modules.ASR.utils import load_files
-from Modules.ASR.main import transcribe
+from Modules.ASR.utils import load_files,load_files_mod
+from Modules.ASR.main import transcribe,transcribe_mod
 
 # Instantiate the SMT module
 # smt = SMT()
 
 # Load the ASR files
-model, decoder = load_files()
+# model, decoder = load_files()
+model, decoder = load_files_mod()
 
 
 app = Flask(__name__)
@@ -35,7 +36,8 @@ def speech():
     audio_file = 'audio.wav'
     os.system(
         "ffmpeg -i {0} -vn {1}".format('audio.webm', audio_file))
-    transcript = transcribe(audio_file, model, decoder)
+    # transcript = transcribe(audio_file, model, decoder)
+    transcript = transcribe_mod(audio_file, model, decoder)
     # remove the audio file
     os.remove(audio_file)
     response = jsonify({'aslg': 'aslg', 'transcript': transcript})
