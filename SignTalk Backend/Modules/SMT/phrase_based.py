@@ -66,16 +66,4 @@ class PhraseBasedModel:
             f_phrase = tuple(f_phrase.split())
             e_phrase = tuple(e_phrase.split())
             self.f_e_phrase_table.add(f_phrase, e_phrase, log(score))   
-        
-##############################################################################################
-# Path: Integration\Decoder\phrase_based.py
-from nltk.translate.stack_decoder import StackDecoder
-
-class Decoder:
-    def __init__(self, translation_model, e_language_model = None):
-        self.stack_decoder = StackDecoder(translation_model.f_e_phrase_table, e_language_model)
-
-    def translate(self, f):
-        e_tokens = self.stack_decoder.translate(f.split())
-        e = ' '.join(e_tokens)
-        return e
+   

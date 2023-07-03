@@ -18,8 +18,8 @@ const Forward = ({ recording, setRecording }) => {
         },
       })
       .then((res) => {
-        console.log(res.data.transcript);
-        setGloss(res.data.asl_gloss);
+        console.log(res);
+        setGloss(res.data.aslg);
         setTranscript(res.data.transcript);
       })
       .catch((err) => {
@@ -48,6 +48,7 @@ const Forward = ({ recording, setRecording }) => {
             </button>
             {/* {gloss && <Avatar gloss={gloss}/>} */}
             {gloss && <h2>{gloss}</h2>}
+            {transcript && <h2>{transcript}</h2>}
           </div>
         )}
       />
