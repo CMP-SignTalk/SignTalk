@@ -1,12 +1,12 @@
+import os  
+import sys
+
+# Solve the problem of mandatory put the lm.py, imb1.py, and phrase-based.py in the same directory of server.py
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 import Modules.SMT.utils as utils
 import Modules.SMT.ibm1_decoder as ibm1_decoder
 import Modules.SMT.phrase_based_decoder as phrase_based_decoder
-
-# import utils as utils
-# import ibm1_decoder as ibm1_decoder
-# import phrase_based_decoder as phrase_based_decoder
-
-import os
 
 class SMT:
     def __init__(self):

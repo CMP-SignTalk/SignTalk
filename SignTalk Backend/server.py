@@ -34,7 +34,7 @@ def corsify(response):
 
 @app.route('/audio', methods=['POST'])
 def speech():
-    # The Forward path (Speech Recognition then ASL Translation)
+    # The Forward path (Automatic Speech Recognition then Statistical Machine Translation)
     received_file = request.files['audio']
     received_file.save('audio.webm')
     audio_file = 'audio.wav'
@@ -51,7 +51,7 @@ def speech():
     
 @app.route('/video', methods=['POST'])
 def video():
-    # The Backward path (CV then ASL translation then Text to Speech)
+    # The Backward path (Computer Vision then Statistical Machine Translation then Text to Speech)
     video_file = request.files['video']
     # Get the ASL Gloss from the video file - Abdallah Work Here
     # aslg = asl_recognition(video_file)

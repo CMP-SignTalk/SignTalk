@@ -2,8 +2,8 @@ import dill
 import os
 import gdown
 
-def load_model(filename):
-    with open(filename, 'rb') as f:
+def load_model(filepath):
+    with open(filepath, 'rb') as f:
         model = dill.load(f)
     return model
 
