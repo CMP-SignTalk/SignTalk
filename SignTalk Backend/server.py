@@ -2,6 +2,9 @@ import os
 import sys
 from flask import Flask, request, jsonify, send_file
 
+# Add the project root directory to the Python path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 # Import our modules from the Modules directory
 # 1. Automatic Speech Recognition (ASR) module
 from Modules.ASR.utils import load_files
@@ -32,9 +35,14 @@ def corsify(response):
 @app.route('/audio', methods=['POST'])
 def speech():
     # The Forward path (Speech Recognition then ASL Translation)
-    audio_file = request.files['audio']
+    received_file = request.files['audio']
+    received_file.save('audio.webm')
+    audio_file = 'audio.wav'
+    os.system("ffmpeg -i {0} -vn {1}".format('audio.webm', audio_file))
     # Get the english transcript from the audio file
     en = transcribe(audio_file, model, decoder)
+    # Remove the audio file after we're done with it
+    os.remove(audio_file)
     # Translate the english to ASL Gloss
     aslg = smt.forward_translate(en)
     # Return the ASL Gloss and the english transcript
@@ -45,7 +53,7 @@ def speech():
 def video():
     # The Backward path (CV then ASL translation then Text to Speech)
     video_file = request.files['video']
-    # Get the ASL Gloss from the video file
+    # Get the ASL Gloss from the video file - Abdallah Work Here
     # aslg = asl_recognition(video_file)
     aslg = 'girl be in france'
     # Translate the ASL Gloss to english

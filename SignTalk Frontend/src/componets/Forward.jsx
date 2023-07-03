@@ -5,9 +5,10 @@ import axios from 'axios';
 
 const Forward = ({ recording, setRecording }) => {
   const [gloss, setGloss] = useState(null);
+  const [transcript, setTranscript] = useState(null);
 
   const onStopHandler = (blobUrl, blob) => {
-    const file = new File([blob], 'audio', { type: blob.type });
+    const file = new File([blob], 'audio.webm', { type: 'audio/wav' });
     const formData = new FormData();
     formData.append('audio', file);
     axios
@@ -17,7 +18,9 @@ const Forward = ({ recording, setRecording }) => {
         },
       })
       .then((res) => {
+        console.log(res.data.transcript);
         setGloss(res.data.asl_gloss);
+        setTranscript(res.data.transcript);
       })
       .catch((err) => {
         console.log(err);
@@ -33,12 +36,12 @@ const Forward = ({ recording, setRecording }) => {
         }}
         onStop={onStopHandler}
         render={({ startRecording, stopRecording, mediaBlobUrl }) => (
-          <div className='flex flex-col justify-center items-center'>
+          <div className="flex flex-col justify-center items-center">
             <button
-              className='btn'
+              className="btn"
               onClick={recording ? stopRecording : startRecording}
             >
-              <span className='mr-2'>
+              <span className="mr-2">
                 <MdKeyboardVoice />
               </span>
               {recording ? 'Stop' : 'Start'} Recording
