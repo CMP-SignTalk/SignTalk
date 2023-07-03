@@ -46,9 +46,20 @@ const Forward = ({ recording, setRecording }) => {
               </span>
               {recording ? 'Stop' : 'Start'} Recording
             </button>
-            {/* {gloss && <Avatar gloss={gloss}/>} */}
-            {gloss && <h2>{gloss}</h2>}
-            {transcript && <h2>{transcript}</h2>}
+            {transcript && (
+              <div className="flex flex-row">
+                <label htmlFor="transcript">Transcript: </label>
+                &nbsp;&nbsp;&nbsp;
+                <p id="transcript">{transcript}</p>
+              </div>
+            )}
+            {gloss && (
+              <div className="flex flex-row">
+                <label htmlFor="gloss">Glosses: </label>
+                &nbsp;&nbsp;&nbsp;
+                <p id="gloss">{gloss}</p>
+              </div>
+            )}
           </div>
         )}
       />
