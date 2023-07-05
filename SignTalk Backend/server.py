@@ -53,7 +53,7 @@ def speech():
     
 @app.route('/video', methods=['POST'])
 def video():
-    # The Backward path (Computer Vision then Statistical Machine Translation then Text to Speech)
+    # The Backward path (Continuous Sign Language Recognition then Statistical Machine Translation then Text to Speech)
     video_file = request.files['video']
     # Get the ASL Gloss from the video file - Abdallah Work Here
     # aslg = asl_recognition(video_file)
