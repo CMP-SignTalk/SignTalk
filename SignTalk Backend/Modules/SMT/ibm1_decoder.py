@@ -1,10 +1,13 @@
 # Path: Integration\Decoder\ibm1.py
+import re
 class Decoder:
     def __init__(self, translation_model, language_model = None):
         self.translation_model = translation_model
         self.language_model = language_model
 
     def translate(self, f):
+        # Remove special characters with regex, convert to lowercase, and split into tokens
+        f = re.sub(r'[^a-zA-Z0-9\s]', '', f)
         f_tokens = f.lower().split()
         e_tokens = []
         for token in f_tokens:
