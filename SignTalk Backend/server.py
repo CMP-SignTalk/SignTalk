@@ -69,7 +69,7 @@ def gloss():
         gloss = gloss.split()
         if len(gloss) == 0:
             # Return an empty array if the gloss is empty
-            return jsonify('')  
+            return ''
         else:
             # Move the file pointer to the beginning of the file
             f.seek(0)
