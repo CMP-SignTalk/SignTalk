@@ -27,6 +27,11 @@ smt = SMT()
 
 app = Flask(__name__)
 
+# this is the list of string that will be filled with the sign glosses [my_sign]
+my_sign = ['love']
+copy_sign= []
+
+
 def corsify(response):
     response.headers.add("Access-Control-Allow-Origin", "*")
     response.headers.add("Access-Control-Allow-Headers", "*")
@@ -65,6 +70,18 @@ def video():
     # Return the audio file - TODO: return the english transcript as well
     response = send_file(audio, mimetype='audio/mpeg', as_attachment=False)
     return corsify(response)
+
+@app.route('/signs')
+def signs():
+    global my_sign
+    global copy_sign
+    copy_sign = my_sign[:] 
+    my_sign = []
+    if len(copy_sign) != 0:
+        return jsonify(copy_sign)
+    else :
+        return ''    
+
 
 if __name__ == '__main__':
     app.run()
