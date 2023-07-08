@@ -52,13 +52,35 @@ def speech():
     os.remove(audio_file)
     # Translate the english to ASL Gloss
     aslg = smt.forward_translate(transcript)
+    # Store the gloss in the file gloss.txt
+    with open('gloss.txt', 'w') as f:
+        f.write(aslg)
     # Return the ASL Gloss and the english transcript
     response = jsonify({'transcript': transcript, 'aslg': aslg})
     return corsify(response)
     
+
+@app.route('/gloss', methods=['GET'])
+def gloss():
+    with open('gloss.txt', 'r+') as f:
+        # Read the gloss from the file and remove any trailing whitespace
+        gloss = f.read().strip()
+        # Split the gloss into a list of words
+        gloss = gloss.split()
+        if len(gloss) == 0:
+            # Return an empty array if the gloss is empty
+            return jsonify({'gloss': []})  
+        else:
+            # Move the file pointer to the beginning of the file
+            f.seek(0)
+            # Truncate the file, removing its contents
+            f.truncate()
+            # Return the gloss as a JSON object
+            return jsonify({'gloss': gloss})
+            
 @app.route('/video', methods=['POST'])
 def video():
-    # The Backward path (Computer Vision then Statistical Machine Translation then Text to Speech)
+    # The Backward path (Continuous Sign Language Recognition then Statistical Machine Translation then Text to Speech)
     video_file = request.files['video']
     # Get the ASL Gloss from the video file - Abdallah Work Here
     # aslg = asl_recognition(video_file)
