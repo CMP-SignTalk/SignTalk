@@ -2,6 +2,7 @@ import os
 import sys
 from flask import Flask, request, jsonify, send_file
 from Modules.CSLR.Detecting_sign import main_func
+from flask_cors import CORS
 # Add the project root directory to the Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
