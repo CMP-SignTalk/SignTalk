@@ -1,9 +1,11 @@
 /node_modules
 /__pycache__/
+/models
 SignTalk Backend/Modules/ASR/models
 SignTalk Backend/Modules/ASR/__pycache__
 SignTalk Backend/Modules/ASR/utilities/__pycache__
 SignTalk Backend/Modules/SMT/__pycache__
+SignTalk Backend/Modules/SMT/models
 SignTalk Backend/Modules/SR/__pycache__
 SignTalk Backend/Modules/TTS/__pycache__
 SignTalk Backend/__pycache__
