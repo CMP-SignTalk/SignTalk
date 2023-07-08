@@ -69,14 +69,14 @@ def gloss():
         gloss = gloss.split()
         if len(gloss) == 0:
             # Return an empty array if the gloss is empty
-            return jsonify({'gloss': []})  
+            return jsonify('')  
         else:
             # Move the file pointer to the beginning of the file
             f.seek(0)
             # Truncate the file, removing its contents
             f.truncate()
             # Return the gloss as a JSON object
-            return jsonify({'gloss': gloss})
+            return jsonify(gloss)
             
 @app.route('/video', methods=['POST'])
 def video():
@@ -93,12 +93,15 @@ def video():
     response = send_file(audio, mimetype='audio/mpeg', as_attachment=False)
     return corsify(response)
 
+# end point for the 3d avatar to return the signs
 @app.route('/signs')
 def signs():
     global my_sign
     global copy_sign
+    # this part because we want to remove the signs as they will be displayed once
     copy_sign = my_sign[:] 
     my_sign = []
+    # here we check if there is signs to display or not
     if len(copy_sign) != 0:
         return jsonify(copy_sign)
     else :
