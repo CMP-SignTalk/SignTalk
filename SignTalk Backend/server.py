@@ -1,6 +1,7 @@
 import os
 import sys
 from flask import Flask, request, jsonify, send_file
+from flask_cors import CORS
 
 # Add the project root directory to the Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -26,10 +27,11 @@ smt = SMT()
 
 
 app = Flask(__name__)
+CORS(app)
 
 # this is the list of string that will be filled with the sign glosses [my_sign]
 my_sign = ['love']
-copy_sign= []
+copy_sign= []  
 
 
 def corsify(response):
