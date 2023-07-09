@@ -9,7 +9,7 @@ const App = () => {
     <div className='h-screen flex flex-col text-signtalk-100'>
       <Header />
       <Main />
-      <Avatar/>
+      {/* <Avatar/> */}
     </div>
   );
 };
