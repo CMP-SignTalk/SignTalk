@@ -95,15 +95,17 @@ def video():
     os.chdir("../../")
     alsg=""
     for sign in signs:
-        aslg+=sign
-        aslg+=' '
-    # # Translate the ASL Gloss to english
-    # en = smt.backward_translate(aslg)
-    # # Convert the english to audio
-    # audio = text_to_speech(en)
-    # # Return the audio file - TODO: return the english transcript as well
-    # response = send_file(audio, mimetype='audio/mpeg', as_attachment=False)
-    # return corsify(response)
+        alsg+=sign
+        alsg+=' '
+    # Translate the ASL Gloss to english
+    en = smt.backward_translate(alsg)
+    # Convert the english to audio
+    print(alsg)
+    print(en)
+    audio = text_to_speech(en)
+    # Return the audio file - TODO: return the english transcript as well
+    response = send_file(audio, mimetype='audio/mpeg', as_attachment=False)
+    return corsify(response)
 
 
 

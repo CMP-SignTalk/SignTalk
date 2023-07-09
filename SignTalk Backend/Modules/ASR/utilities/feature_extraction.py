@@ -1,5 +1,5 @@
 import torch
-
+from .mfcc.mfcc import MFCC
 
 class Norm(torch.nn.Module):
     '''
@@ -16,12 +16,17 @@ class Norm(torch.nn.Module):
         std = tensor.std(-1, keepdim=True)
         return (tensor - mean) / std
 
-##TODO: ct
-
-
 def feature_extraction(waveform):
-    waveform = waveform.unsqueeze(0)
-    mean = waveform.mean()
-    std = waveform.std()
-    waveform = (waveform - mean) / std
-    return waveform
+    transform = torch.nn.Sequential(
+        MFCC(),
+        Norm()
+    )
+    return transform(waveform)
+
+
+
+
+
+
+
+
