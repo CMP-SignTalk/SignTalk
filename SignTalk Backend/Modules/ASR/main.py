@@ -22,15 +22,3 @@ def transcribe(speech_file, model, decoder):
     return transcript
 
 
-##TODO: rt
-def transcribe_mod(speech_file, model, decoder):
-    waveform, sample_rate = torchaudio.load(speech_file)
-    if sample_rate != SAMPLE_RATE:
-        resampler = torchaudio.transforms.Resample(sample_rate, SAMPLE_RATE)
-        waveform = resampler(waveform)
-    model.eval()
-    with torch.no_grad():
-        output, _ = model(waveform)
-    result = decoder(output)
-    transcript = " ".join(result[0][0].words).strip()
-    return transcript
