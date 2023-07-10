@@ -1,7 +1,6 @@
 import os
 import sys
 from flask import Flask, request, jsonify, send_file
-from Modules.CSLR.Detecting_sign import main_func
 from flask_cors import CORS
 # Add the project root directory to the Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -12,8 +11,8 @@ from Modules.ASR.utils import load_files,load_files_mod
 from Modules.ASR.main import transcribe,transcribe_mod
 # 2. Statistical Machine Translation (SMT) module
 from Modules.SMT.smt import SMT
-# 3. Computer Vision (CV) module
-# Abdallah Work Here
+# 3. Continuous Sign Language Recognition (CSLR) module
+from Modules.CSLR.Detecting_sign import main_func
 # 4. Text to Speech (TTS) module
 from Modules.TTS.tts import text_to_speech
 
@@ -22,16 +21,9 @@ from Modules.TTS.tts import text_to_speech
 model, decoder = load_files_mod()
 # 2. Instantiate the SMT module
 smt = SMT()
-# 3. Instantiate the CV module
-# Abdallah Work Heremodel
-
 
 app = Flask(__name__)
 CORS(app)
-
-# this is the list of string that will be filled with the sign glosses [my_sign]
-my_sign = ['love']
-copy_sign= []  
 
 
 def corsify(response):
@@ -108,19 +100,6 @@ def video():
     # Return the audio file - TODO: return the english transcript as well
     response = send_file(audio, mimetype='audio/mpeg', as_attachment=False)
     return corsify(response)
-
-
-
-@app.route('/signs')
-def signs():
-    global my_sign
-    global copy_sign
-    copy_sign = my_sign[:] 
-    my_sign = []
-    if len(copy_sign) != 0:
-        return jsonify(copy_sign)
-    else :
-        return ''    
 
 
 if __name__ == '__main__':
