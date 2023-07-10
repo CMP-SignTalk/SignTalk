@@ -21,7 +21,7 @@ def feature_extraction(waveform):
         MFCC(),
         Norm()
     )
-    return transform(waveform)
+    return transform(waveform).unsqueeze(0)
 
 
 
