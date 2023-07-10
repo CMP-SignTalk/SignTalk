@@ -7,12 +7,12 @@ def load_model(filepath):
         model = dill.load(f)
     return model
 
-forward_lm_link = "https://drive.google.com/uc?id=1qhbZKc4pIQ137OXmf6PX0Hl1kJJTMY95"
-backward_lm_link = "https://drive.google.com/uc?id=1--P9cHPRZIohax2U9zViHKxwTBY-cOoT"
-forward_ibm1_link = "https://drive.google.com/uc?id=1-4TMhFmYRSsM_OT2H4sxfnf_aJPlgzsw"
-backward_ibm1_link = "https://drive.google.com/uc?id=1IVtRWo_XKd6F-UrC8Th1bn0V2BcGMCSi"
-forward_phrase_based_link = "https://drive.google.com/uc?id=1-3UwntBPWzCeODorAz4cXnRLRALOSSyP"
-backward_phrase_based_link = "https://drive.google.com/uc?id=1-1ChZLOND2G8dNpVuzwl0uqg_9znRRJ1"
+forward_lm_link = "https://drive.google.com/uc?id=1wHuSrrlEDjE9cyMjx4PBlT6pAZkEXdSx"
+backward_lm_link = "https://drive.google.com/uc?id=1---4UT0pnASDs1tJjTfTpWjp-IU8r4wd"
+forward_ibm1_link = "https://drive.google.com/uc?id=15pfFdUUdekkCVxox5ea85nAZ9xS_1wQa"
+backward_ibm1_link = "https://drive.google.com/uc?id=14ojvPyxJnCZjHmHSn5V4HFALaCEF08Tp"
+forward_phrase_based_link = "https://drive.google.com/uc?id=1-2CCo2HQDF84sU9eLKel_gCdFt1rBpcD"
+backward_phrase_based_link = "https://drive.google.com/uc?id=1-6fRBK_YsA3k1NKyOMtRRUatsQ__jzz1"
 
 models_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'models')
 forward_lm_path = os.path.join(models_dir, 'forward_lm.pkl')

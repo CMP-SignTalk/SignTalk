@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { MdKeyboardVoice } from 'react-icons/md';
 import { ReactMediaRecorder } from 'react-media-recorder';
 import axios from 'axios';
+import Avatar from './Avatar';
 
 const Forward = ({ recording, setRecording }) => {
   const [gloss, setGloss] = useState(null);
@@ -60,6 +61,7 @@ const Forward = ({ recording, setRecording }) => {
                 <p id="gloss">{gloss}</p>
               </div>
             )}
+            <Avatar />
           </div>
         )}
       />

@@ -10,8 +10,7 @@ labels = [
     "'",
     "*"
 ]
-tokens = ['-', '|', 'e', 't', 'a', 'o', 'n', 'i', 'h', 's', 'r', 'd', 'l', 'u',
-          'm', 'w', 'c', 'f', 'g', 'y', 'p', 'b', 'v', 'k', "'", 'x', 'j', 'q', 'z']
+
 
 folder_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'models')
 
@@ -92,6 +91,10 @@ def load_files():
     return acoustic_model, beam_search_decoder
 
 ##TODO: rt
+
+
+tokens = ['-', '|', 'e', 't', 'a', 'o', 'n', 'i', 'h', 's', 'r', 'd', 'l', 'u',
+          'm', 'w', 'c', 'f', 'g', 'y', 'p', 'b', 'v', 'k', "'", 'x', 'j', 'q', 'z']
 
 acoustic_file_mod = "weights.pt"
 
