@@ -10,8 +10,8 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Import our modules from the Modules directory
 # 1. Automatic Speech Recognition (ASR) module
-from Modules.ASR.utils import load_files,load_files_mod
-from Modules.ASR.main import transcribe,transcribe_mod
+# from Modules.ASR.utils import load_files
+# from Modules.ASR.main import transcribe
 # 2. Statistical Machine Translation (SMT) module
 
 from Modules.SMT.smt import SMT
@@ -23,7 +23,7 @@ from Modules.TTS.tts import text_to_speech
 
 # Initialize the modules
 # 1. Load the ASR files
-model, decoder = load_files_mod()
+# model, decoder = load_files()
 # 2. Instantiate the SMT module
 smt = SMT()
 
@@ -46,11 +46,13 @@ def speech():
     os.system("ffmpeg -i {0} -vn {1}".format('audio.webm', audio_file))
     # # Get the english transcript from the audio file
     # en = transcribe(audio_file, model, decoder)
-    transcript = transcribe_mod(audio_file, model, decoder)
+    # transcript = transcribe(audio_file, model, decoder)
     # Remove the audio file after we're done with it
+    transcript = "placeholder"
     os.remove(audio_file)
     # Translate the english to ASL Gloss
     aslg = smt.forward_translate(transcript)
+
     # Store the gloss in the file gloss.txt
     with open('gloss.txt', 'w') as f:
         f.write(aslg)

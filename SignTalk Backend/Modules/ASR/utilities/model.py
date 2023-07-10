@@ -15,7 +15,7 @@ class Block(nn.Module):
 
 
 class Model(nn.Module):
-    def __init__(self, num_classes, num_features):
+    def __init__(self, num_classes, num_features=39):
         super(Model, self).__init__()
         self.model = nn.Sequential(
             Block(in_channels=num_features, out_channels=250,
