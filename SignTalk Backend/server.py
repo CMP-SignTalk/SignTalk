@@ -1,24 +1,28 @@
 import os
 import sys
 from flask import Flask, request, jsonify, send_file
+import numpy as np 
+
 from Modules.CSLR.Detecting_sign import main_func
 # Add the project root directory to the Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Import our modules from the Modules directory
 # 1. Automatic Speech Recognition (ASR) module
-from Modules.ASR.utils import load_files,load_files_mod
-from Modules.ASR.main import transcribe,transcribe_mod
+# from Modules.ASR.utils import load_files,load_files_mod
+# from Modules.ASR.main import transcribe,transcribe_mod
 # 2. Statistical Machine Translation (SMT) module
+
 from Modules.SMT.smt import SMT
 # 3. Computer Vision (CV) module
 # Abdallah Work Here
 # 4. Text to Speech (TTS) module
+
 from Modules.TTS.tts import text_to_speech
 
 # Initialize the modules
 # 1. Load the ASR files
-model, decoder = load_files_mod()
+# model, decoder = load_files_mod()
 # 2. Instantiate the SMT module
 smt = SMT()
 # 3. Instantiate the CV module
@@ -41,23 +45,24 @@ def corsify(response):
 @app.route('/audio', methods=['POST'])
 def speech():
     # The Forward path (Automatic Speech Recognition then Statistical Machine Translation)
-    received_file = request.files['audio']
-    received_file.save('audio.webm')
-    audio_file = 'audio.wav'
-    os.system("ffmpeg -i {0} -vn {1}".format('audio.webm', audio_file))
-    # # Get the english transcript from the audio file
-    # en = transcribe(audio_file, model, decoder)
-    transcript = transcribe_mod(audio_file, model, decoder)
-    # Remove the audio file after we're done with it
-    os.remove(audio_file)
-    # Translate the english to ASL Gloss
-    aslg = smt.forward_translate(transcript)
-    # Store the gloss in the file gloss.txt
-    with open('gloss.txt', 'w') as f:
-        f.write(aslg)
-    # Return the ASL Gloss and the english transcript
-    response = jsonify({'transcript': transcript, 'aslg': aslg})
-    return corsify(response)
+    # received_file = request.files['audio']
+    # received_file.save('audio.webm')
+    # audio_file = 'audio.wav'
+    # os.system("ffmpeg -i {0} -vn {1}".format('audio.webm', audio_file))
+    # # # Get the english transcript from the audio file
+    # # en = transcribe(audio_file, model, decoder)
+    # transcript = transcribe_mod(audio_file, model, decoder)
+    # # Remove the audio file after we're done with it
+    # os.remove(audio_file)
+    # # Translate the english to ASL Gloss
+    # aslg = smt.forward_translate(transcript)
+    # # Store the gloss in the file gloss.txt
+    # with open('gloss.txt', 'w') as f:
+    #     f.write(aslg)
+    # # Return the ASL Gloss and the english transcript
+    # response = jsonify({'transcript': transcript, 'aslg': aslg})
+    return None 
+    # return corsify(response)
     
 
 @app.route('/gloss', methods=['GET'])
@@ -94,16 +99,34 @@ def video():
     print(signs)
     os.chdir("../../")
     alsg=""
-    for sign in signs:
-        aslg+=sign
-        aslg+=' '
-    # # Translate the ASL Gloss to english
-    # en = smt.backward_translate(aslg)
-    # # Convert the english to audio
-    # audio = text_to_speech(en)
-    # # Return the audio file - TODO: return the english transcript as well
-    # response = send_file(audio, mimetype='audio/mpeg', as_attachment=False)
-    # return corsify(response)
+    i = 0 
+    j = 1 
+    # signs = np.unique(np.array(signs))
+    # for sign in signs:
+    #     print(sign)
+    #     alsg+=sign
+    #     alsg+=' '
+    uniq= []
+    for sign in signs : 
+       
+        
+        if sign not in uniq : 
+            uniq.append(sign)
+    
+    for sign in uniq:
+        if sign =='yours': sign = 'your'       
+        alsg+=sign 
+        alsg+=' '
+    # Translate the ASL Gloss to english
+    print(alsg)
+
+    
+    # en = smt.backward_translate(alsg)
+    # Convert the english to audio
+    audio = text_to_speech(alsg)
+    # Return the audio file - TODO: return the english transcript as well
+    response = send_file(audio, mimetype='audio/mpeg', as_attachment=False)
+    return corsify(response)
 
 
 

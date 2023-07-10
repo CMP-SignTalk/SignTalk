@@ -10,7 +10,7 @@ const LiveVideoPreview = ({ stream }) => {
   if (!stream) {
     return null;
   }
-  return <video ref={videoRef} width={300} height={300} autoPlay controls />;
+  return <video ref={videoRef} width={640} height={480} autoPlay controls />;
 };
 
 export default LiveVideoPreview;

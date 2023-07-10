@@ -13,6 +13,7 @@ import numpy as np
 mp_holistic = mp.solutions.holistic # Holistic model
 mp_pose = mp.solutions.pose
 
+
 def mediapipe_detection(image,model):
     image= cv2.cvtColor(image,cv2.COLOR_BGR2RGB) 
     image.flags.writeable=False
@@ -22,15 +23,27 @@ def mediapipe_detection(image,model):
     return image, results
 
 def load_all_signs_model():
-    signs = {"age":0,"I":1 , "love":2,"my":3,"name":4,"school":5,
-         "sign":6 , "talk":7,"teacher":8,"what":9,"where":10,"yours":11}
+    """
+    Loading the First Model for Sign Detection
+
+    Args:
+
+    None
+    Returns:
+
+    model (Sequential): The model used for sign detection.
+    Description:
+    This function loads the first-stage model that will be used for sign detection before the stages of checking. It does not take any arguments and returns the loaded model.
+    """
+    signs = {"hello":0,"I":1,"live":2,"love":3,"my":4,"name":5,
+                "sign":6,"talk":7,"teacher":8,"what":9,"where":10,"yours":11}
     model=Sequential()
     model.add(LSTM(64,return_sequences=True ,activation='relu',input_shape=(40,126)))
     model.add(LSTM(64,return_sequences=False,activation='relu'))
     model.add(Dense(512, activation='relu'))
     model.add(Dense(64, activation='relu'))
     model.add(Dense(len(signs), activation='softmax'))
-    model.load_weights("models/best_model_on_12_sign_(ISA).h5")
+    model.load_weights("models/no_clownv0.4(ISA).h5")
     return model
 
 temp_nose_x = None ; 
@@ -38,7 +51,22 @@ temp_nose_y = None ;
 
 
 
-def create_model_check(name="age"):
+
+
+
+def create_model_check(name="Hello"):
+    """
+    Creating the Checker Model for Sign Verification
+
+    Args:
+
+    name (str): The name of the required model.
+    Returns:
+
+    model (Sequential): The checker model for the sign.
+    Description:
+    This function loads the model for the corresponding sign, which will be used as a checker in the second stage after the sign detection stage. It takes the name of the required model as input and returns the loaded model.
+    """
     signs={f"{name}":1,f"not_{name}":0}
     model=Sequential()
     model.add(LSTM(64,return_sequences=False ,activation='relu',input_shape=(40,126)))
@@ -49,7 +77,19 @@ def create_model_check(name="age"):
     return model 
 
 def load_signs_models():
-    signs = ["age","I" , "love","my","name","school","sign" , "talk","teacher","what","where","yours"]
+    """
+    Loading All Sign Models into Memory
+
+    Args:
+
+    None
+    Returns:
+
+    models (list): A list of all models that will be used in the verification stage.
+    Description:
+    This function loads all the sign models into memory to reduce the number of I/O operations. It does not take any arguments and returns a list of all the loaded models that will be used in the verification stage.
+    """
+    signs = ["hello","I","live","love","my","name","sign","talk","teacher","what","where","yours"]
     models = []
     for sign in signs:
         models.append(create_model_check(sign)) 
@@ -133,20 +173,32 @@ def get_keypoints(vid_name):
 
 
 
-def create_model_check(name="age"):
-    signs={f"{name}":1,f"not_{name}":0}
-    model=Sequential()
-    model.add(LSTM(64,return_sequences=False ,activation='relu',input_shape=(40,126)))
-    model.add(Dense(512, activation='relu'))
-    model.add(Dense(64, activation='relu'))
-    model.add(Dense(len(signs), activation='softmax'))
-    model.load_weights(f"models/{name}_model.h5")
-    return model 
 
 
-def check_sign(key_points,model):
-    model_results=model.predict(key_points)
+def check_sign(key_points,model,argmax):
+    """
+    Verification Stage Function
+
+    Args:
+
+    keyp_points (numpy.ndarray): Numpy array containing the keypoints of 40 frames used for verification.
+    model: The model corresponding to the sign that will be used for verification.
+    argmax: The sign number.
+    Description:
+    This function is used for the verification stage. It takes the keypoints of 40 frames, the corresponding sign model, and the sign number as input. It verifies if the detected sign is correct by using the provided model. If the verification is successful, it returns True; otherwise, it returns False.
+    """
+    model_results=model.predict(key_points) 
+    print(argmax)
+    if (argmax ==1 or argmax==0):
+        if(np.any(model_results>0.9)): 
+            
+            if(np.argmax(model_results)==1):
+                return True 
+        else : return False 
+
+    print(model_results)
     if(np.any(model_results>0.7)): 
+            
             if(np.argmax(model_results)==1):
                 return True 
 
@@ -154,6 +206,19 @@ def check_sign(key_points,model):
 
 
 def detect_sign(vid_name):
+    """
+    Main Function for Sign Detection
+
+    Args:
+
+    vid_name (str): The name of the video on which you want to detect the sign.
+    Returns:
+
+    detected_signs (list): A list containing all the signs that have been detected within the video.
+    Description:
+    This function combines the first stage and the second stage of sign detection together into one function. It can be considered as the complete pipeline for sign detection. It takes the video name as input and returns a list of all the signs that have been detected within the video.
+    """
+
     detection_list=[]
     key_points_arr, done ,length= get_keypoints(vid_name) 
     index =0 
@@ -167,28 +232,22 @@ def detect_sign(vid_name):
     index = 0 
     model=load_all_signs_model()
     while (length-index>=40 ): 
-        # you should think a lot a bout adding it 
-        # if(np.sum(done[index:index+40])!=-40):
-        #     while(done[index]==-1):
-        #         index+=1
-        #     index+=40 
-        #     continue 
-        signs = {"age":0,"I":1 , "love":2,"my":3,"name":4,"school":5,
-                "sign":6 , "talk":7,"teacher":8,"what":9,"where":10,"yours":11,
-                }
+
+        signs = {"hello":0,"I":1,"live":2,"love":3,"my":4,"name":5,
+                 "sign":6,"talk":7,"teacher":8,"what":9,"where":10,"yours":11}
+        
         model_results=model.predict(key_points_arr[index:index+40][None , :])
         # print( i , model_results)
-        if (np.any(model_results>0.5)):
+        print(np.argmax(model_results))
+        print(model_results)
+        if (np.any(model_results>0.90)):
             arg_max = np.argmax(model_results)
-            if(arg_max==9 or arg_max == 11 ):
-                index+=slide 
-                continue 
-            print(arg_max)
-            is_sign = check_sign(key_points_arr[index:index+40][None , :],signs_models[arg_max])
+            # if(arg_max==0) :index+=1; continue  
+            # print(arg_max)
+            is_sign = check_sign(key_points_arr[index:index+40][None , :],signs_models[arg_max],arg_max)
             if is_sign: 
                 done[index]=arg_max
                 index+=40
-                print("YEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEES",arg_max)
                 continue 
            
         index+=slide 
